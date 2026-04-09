@@ -1,0 +1,72 @@
+/* ── Reset ── */
+html, body { margin:0; width:100%; height:100%; overflow:hidden; font-family:'Inter',system-ui,sans-serif; background:#0d0d14; }
+canvas { display:block; width:100%; height:100%; }
+
+/* ── GUI overlay ── */
+#gui { position:fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:100; display:flex; justify-content:space-between; padding:12px; box-sizing:border-box; }
+
+.gui-panel {
+  pointer-events:all; background:rgba(8,8,16,0.92); backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:14px 16px;
+  color:#dde4f0; box-shadow:0 8px 36px rgba(0,0,0,0.7); overflow-y:auto; max-height:100%;
+}
+.gui-panel::-webkit-scrollbar { width:4px; }
+.gui-panel::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:4px; }
+
+.left-panel { width:260px; }
+.right-panel { width:270px; }
+
+.gui-title { font-size:14px; font-weight:700; letter-spacing:0.04em; margin-bottom:12px; color:#a8c8ff; }
+.gui-section { margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:12px; }
+.gui-section:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.gui-label { font-size:9px; text-transform:uppercase; letter-spacing:0.14em; color:#5a7aaa; margin-bottom:6px; }
+
+/* ── Buttons ── */
+.model-btns, .add-btns { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:6px; }
+
+.model-btn, .rm-btn, .lt-btn {
+  flex:1 1 auto; padding:5px 4px; font-size:10px; font-weight:600;
+  border:1px solid rgba(255,255,255,0.1); border-radius:6px;
+  background:rgba(255,255,255,0.04); color:#7a9cc8; cursor:pointer;
+  transition:all 0.15s;
+}
+.model-btn:hover, .rm-btn:hover, .lt-btn:hover { background:rgba(80,140,255,0.12); color:#c0d8ff; border-color:rgba(80,140,255,0.3); }
+.model-btn.active, .rm-btn.active, .lt-btn.active { background:rgba(74,158,255,0.22); color:#d0e8ff; border-color:rgba(74,158,255,0.55); }
+
+.btn-sm {
+  flex:1; padding:6px 8px; font-size:10px; font-weight:600; cursor:pointer;
+  border:1px solid rgba(255,255,255,0.1); border-radius:6px; text-align:center;
+  background:rgba(60,180,100,0.12); color:#7ae0a0; transition:all 0.15s;
+}
+.btn-sm:hover { background:rgba(60,180,100,0.25); }
+.btn-del { background:rgba(220,60,60,0.12); color:#ff8888; }
+.btn-del:hover { background:rgba(220,60,60,0.3); }
+.btn-file { display:inline-flex; align-items:center; justify-content:center; background:rgba(180,120,255,0.12); color:#c8a8ff; }
+.btn-file:hover { background:rgba(180,120,255,0.25); }
+
+/* ── Object list ── */
+.obj-list { max-height:140px; overflow-y:auto; }
+.obj-item {
+  padding:5px 8px; font-size:11px; border-radius:5px; cursor:pointer;
+  margin-bottom:2px; color:#8899bb; transition:all 0.12s;
+  border:1px solid transparent;
+}
+.obj-item:hover { background:rgba(80,140,255,0.1); color:#c0d8ff; }
+.obj-item.selected { background:rgba(74,158,255,0.18); color:#d0e8ff; border-color:rgba(74,158,255,0.4); }
+
+/* ── Sliders ── */
+.sl-row { display:flex; align-items:center; gap:5px; margin-bottom:4px; }
+.sl-lbl { font-size:10px; color:#7a90b0; width:50px; flex-shrink:0; }
+.sl-row input[type="range"] { flex:1; accent-color:#4a9eff; height:3px; cursor:pointer; }
+.sl-val { font-size:10px; color:#a0bce0; width:36px; text-align:right; font-variant-numeric:tabular-nums; }
+
+/* ── Checkbox ── */
+.cb-row { display:flex; align-items:center; gap:7px; font-size:10px; color:#7a90b0; cursor:pointer; margin-top:4px; }
+.cb-row input { accent-color:#4a9eff; }
+
+/* ── Color ── */
+.color-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; font-size:10px; color:#7a90b0; }
+.color-row input[type="color"] { width:36px; height:22px; border:none; border-radius:4px; cursor:pointer; background:none; padding:0; }
+
+/* ── Hint ── */
+.gui-hint { font-size:9px; color:#3a4a5a; text-align:center; margin-top:8px; letter-spacing:0.04em; }
