@@ -37,6 +37,7 @@ export function initGUI(
     <div class="add-btns">
       <button id="addCube" class="btn-sm">+ Cube</button>
       <button id="addSphere" class="btn-sm">+ Sphere</button>
+      <button id="addTeapot" class="btn-sm">+ Taza</button>
       <label class="btn-sm btn-file">+ OBJ<input type="file" id="objFile" accept=".obj" hidden></label>
     </div>
   </div>
@@ -153,6 +154,22 @@ export function initGUI(
   /* ── Add buttons ── */
   document.getElementById("addCube")!.addEventListener("click", () => { scene.addObject("cube", `Cube_${scene.objects.length}`); refreshList(); });
   document.getElementById("addSphere")!.addEventListener("click", () => { scene.addObject("sphere", `Sphere_${scene.objects.length}`); refreshList(); });
+  
+  document.getElementById("addTeapot")!.addEventListener("click", async () => {
+    try {
+      // Intenta cargar el archivo obj desde la carpeta public/data/
+      // Ajusta el nombre si tu archivo no se llama "teapot.obj"
+      const res = await fetch("data/teapot.obj");
+      if (!res.ok) throw new Error("No se pudo cargar la taza");
+      const txt = await res.text();
+      scene.addObject("obj", `Taza_${scene.objects.length}`, txt);
+      refreshList();
+    } catch (e) {
+      alert("Error al cargar la taza. Asegúrate de mover la carpeta 'data' adentro de la carpeta 'public' (public/data/teapot.obj)");
+      console.error(e);
+    }
+  });
+
   document.getElementById("objFile")!.addEventListener("change", async (e) => {
     const f = (e.target as HTMLInputElement).files?.[0];
     if (!f) return;
