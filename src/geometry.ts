@@ -37,10 +37,10 @@ export function generateSphere(stacks: number, slices: number): Float32Array {
       const v11 = sphereVertex(phi1, theta1, i + 1, j + 1, stacks, slices);
       const v01 = sphereVertex(phi0, theta1, i, j + 1, stacks, slices);
 
-      // Triangle 1: v00, v10, v11
-      data.push(...v00, ...v10, ...v11);
-      // Triangle 2: v00, v11, v01
-      data.push(...v00, ...v11, ...v01);
+      // Triangle 1 (reversed winding order for correct culling)
+      data.push(...v00, ...v11, ...v10);
+      // Triangle 2
+      data.push(...v00, ...v01, ...v11);
     }
   }
   return new Float32Array(data);
