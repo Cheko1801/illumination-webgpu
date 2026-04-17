@@ -17,6 +17,7 @@ const device = await adapter.requestDevice();
 const ctx = canvas.getContext("webgpu")!;
 const fmt = navigator.gpu.getPreferredCanvasFormat();
 let depthTex: GPUTexture | null = null;
+const camera = new ArcballCamera();
 
 function resize() {
   canvas.width  = Math.max(1, Math.floor(innerWidth  * devicePixelRatio));
@@ -130,8 +131,7 @@ export async function loadTextureForObject(obj: SceneObject, file: File) {
   ]});
 }
 
-/* ───────── Camera & interaction ───────── */
-const camera = new ArcballCamera();
+/* ───────── Interaction ───────── */
 let dragging = false;
 let lastX = 0;
 let lastY = 0;
