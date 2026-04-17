@@ -57,18 +57,27 @@ export class ArcballCamera {
   }
 
   getPosition(): Vec3 {
-    // Camera is at [0, 0, distance] rotated by the inverse of the quaternion
+    return this.calculateTransform().pos;
+  }
+
+  private calculateTransform() {
     const rotMat = quat.toMat4(this.rotation);
-    // Transform [0, 0, distance] by the rotation matrix
-    const x = rotMat[0] * 0 + rotMat[4] * 0 + rotMat[8]  * this.distance + this.target[0];
-    const y = rotMat[1] * 0 + rotMat[5] * 0 + rotMat[9]  * this.distance + this.target[1];
-    const z = rotMat[2] * 0 + rotMat[6] * 0 + rotMat[10] * this.distance + this.target[2];
-    return [x, y, z];
+    // Position = Rotation * [0, 0, distance] + target
+    const px = rotMat[8]  * this.distance + this.target[0];
+    const py = rotMat[9]  * this.distance + this.target[1];
+    const pz = rotMat[10] * this.distance + this.target[2];
+    
+    // Local Up = Rotation * [0, 1, 0]
+    const ux = rotMat[4];
+    const uy = rotMat[5];
+    const uz = rotMat[6];
+
+    return { pos: [px, py, pz] as Vec3, up: [ux, uy, uz] as Vec3 };
   }
 
   getViewMatrix(): Mat4 {
-    const pos = this.getPosition();
-    return mat4.lookAt(pos, this.target, [0, 1, 0]);
+    const transform = this.calculateTransform();
+    return mat4.lookAt(transform.pos, this.target, transform.up);
   }
 
   zoom(delta: number): void {
