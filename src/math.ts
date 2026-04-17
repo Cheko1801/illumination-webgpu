@@ -159,7 +159,59 @@ export const mat4 = {
     m[0] = x[0]; m[4] = x[1]; m[8]  = x[2]; m[12] = -vec3.dot(x, eye);
     m[1] = y[0]; m[5] = y[1]; m[9]  = y[2]; m[13] = -vec3.dot(y, eye);
     m[2] = z[0]; m[6] = z[1]; m[10] = z[2]; m[14] = -vec3.dot(z, eye);
-    m[3] = 0;    m[7] = 0;    m[11] = 0;    m[15] = 1;
+    m[3]  = 0;    m[7]  = 0;    m[11] = 0;    m[15] = 1;
     return m;
   },
+};
+
+export type Quat = Float32Array;
+
+export const quat = {
+  identity(): Quat {
+    return new Float32Array([0, 0, 0, 1]); // x, y, z, w
+  },
+  
+  multiply(a: Quat, b: Quat): Quat {
+    const ax = a[0], ay = a[1], az = a[2], aw = a[3];
+    const bx = b[0], by = b[1], bz = b[2], bw = b[3];
+    return new Float32Array([
+      ax * bw + aw * bx + ay * bz - az * by,
+      ay * bw + aw * by + az * bx - ax * bz,
+      az * bw + aw * bz + ax * by - ay * bx,
+      aw * bw - ax * bx - ay * by - az * bz,
+    ]);
+  },
+  
+  setAxisAngle(axis: Vec3, rad: number): Quat {
+    const halfRad = rad * 0.5;
+    const s = Math.sin(halfRad);
+    return new Float32Array([
+      axis[0] * s,
+      axis[1] * s,
+      axis[2] * s,
+      Math.cos(halfRad),
+    ]);
+  },
+  
+  normalize(q: Quat): Quat {
+    let len = q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3];
+    if (len > 0) {
+      len = 1 / Math.sqrt(len);
+      return new Float32Array([q[0]*len, q[1]*len, q[2]*len, q[3]*len]);
+    }
+    return quat.identity();
+  },
+  
+  toMat4(q: Quat): Mat4 {
+    const x = q[0], y = q[1], z = q[2], w = q[3];
+    const x2 = x + x, y2 = y + y, z2 = z + z;
+    const xx = x * x2,  xy = x * y2,  xz = x * z2;
+    const yy = y * y2,  yz = y * z2,  zz = z * z2;
+    const wx = w * x2,  wy = w * y2,  wz = w * z2;
+    const m = mat4.identity();
+    m[0] = 1 - (yy + zz); m[4] = xy - wz;     m[8]  = xz + wy;
+    m[1] = xy + wz;       m[5] = 1 - (xx + zz); m[9]  = yz - wx;
+    m[2] = xz - wy;       m[6] = yz + wx;     m[10] = 1 - (xx + yy);
+    return m;
+  }
 };

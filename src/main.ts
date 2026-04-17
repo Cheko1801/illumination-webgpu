@@ -21,6 +21,8 @@ let depthTex: GPUTexture | null = null;
 function resize() {
   canvas.width  = Math.max(1, Math.floor(innerWidth  * devicePixelRatio));
   canvas.height = Math.max(1, Math.floor(innerHeight * devicePixelRatio));
+  camera.width = canvas.width;
+  camera.height = canvas.height;
   ctx.configure({ device, format: fmt, alphaMode: "premultiplied" });
   depthTex?.destroy();
   depthTex = device.createTexture({
@@ -131,8 +133,16 @@ export async function loadTextureForObject(obj: SceneObject, file: File) {
 /* ───────── Camera & interaction ───────── */
 const camera = new ArcballCamera();
 let dragging = false;
+let lastX = 0;
+let lastY = 0;
 
-canvas.addEventListener("mousedown", e => { if (e.button === 0) dragging = true; });
+canvas.addEventListener("mousedown", e => { 
+  if (e.button === 0) {
+    dragging = true; 
+    lastX = e.clientX; 
+    lastY = e.clientY; 
+  }
+});
 addEventListener("mouseup", () => { dragging = false; });
 canvas.addEventListener("mousemove", e => {
   if (!dragging) return;
@@ -141,8 +151,10 @@ canvas.addEventListener("mousemove", e => {
     sel.rotation[1] += e.movementX * 0.01;
     sel.rotation[0] += e.movementY * 0.01;
   } else {
-    camera.rotate(e.movementX, e.movementY);
+    camera.rotate(lastX, lastY, e.clientX, e.clientY);
   }
+  lastX = e.clientX;
+  lastY = e.clientY;
 });
 canvas.addEventListener("wheel", e => { e.preventDefault(); camera.zoom(e.deltaY); }, { passive: false });
 
